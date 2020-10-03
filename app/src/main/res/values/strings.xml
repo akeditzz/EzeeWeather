@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">EzeeWeather</string>
+
+    <!--network-->
+    <string name="str_network_error">Whoops!! Network error, Please try again.</string>
+    <!--network Error Message -->
+
+    <string name="network_connection_error">Internet connection lost, please retry again</string>
+    <string name="network_default_error">Something wrong happened, please retry again</string>
+    <string name="network_internal_error">Our systems got an error, please retry again</string>
+    <string name="network_server_not_available">Our services are under maintenance, please retry after some time</string>
+    <string name="server_connection_error">Not able to connect, please retry again</string>
+    <string name="permission_denied">Permission Denied</string>
+    <string name="hint_enter_a_city_name">Enter a City Name</string>
+    <string name="label_search">Search</string>
+    <string name="desc_weather_type_icon">Weather Type Icon</string>
+    <string name="desc_background_image">Background Image</string>
+    <string name="mesg_please_enter_city_name">Please enter a City Name!!</string>
+</resources>

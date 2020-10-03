@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="mainActivityViewModel"
+            type="com.amshotzz.ezeeweather.main.MainActivityViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:background="@color/colorPrimaryDark"
+        android:focusableInTouchMode="true"
+        tools:context=".main.MainActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/viewSpacing_16dp"
+            android:background="@drawable/edittext_background_selector"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/etSearchCity"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/viewSpacing_40dp"
+                android:layout_marginEnd="@dimen/viewSpacing_16dp"
+                android:background="@android:color/transparent"
+                android:hint="@string/hint_enter_a_city_name"
+                android:imeOptions="actionSearch"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences"
+                android:maxHeight="@dimen/viewSpacing_60dp"
+                android:maxLines="2"
+                android:paddingStart="@dimen/viewSpacing_16dp"
+                android:paddingEnd="@dimen/viewSpacing_16dp"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/hint_text_color"
+                android:textSize="@dimen/textSpacing_14sp"
+                app:layout_constraintEnd_toStartOf="@+id/btnSearch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btnSearch"
+                android:layout_width="@dimen/viewSpacing_100dp"
+                android:layout_height="@dimen/viewSpacing_40dp"
+                android:background="@drawable/button_background_selector"
+                android:enabled="false"
+                android:text="@string/label_search"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/textSpacing_14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/body_scroll_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/viewSpacing_0dp"
+            android:fadingEdge="vertical"
+            android:fadingEdgeLength="@dimen/viewSpacing_8dp"
+            android:overScrollMode="never"
+            android:requiresFadingEdge="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_layout">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/body_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/viewSpacing_16dp">
+
+                <TextView
+                    android:id="@+id/tvCityName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/viewSpacing_16dp"
+                    android:drawablePadding="@dimen/viewSpacing_4dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/textSpacing_20sp"
+                    app:drawableStartCompat="@drawable/ic_location"
+                    app:layout_constraintBottom_toBottomOf="@+id/ivWeatherIcon"
+                    app:layout_constraintEnd_toStartOf="@+id/ivWeatherIcon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ivWeatherIcon"
+                    android:text="@{mainActivityViewModel.weatherLiveData.name}" />
+
+                <ImageView
+                    android:id="@+id/ivWeatherIcon"
+                    android:layout_width="@dimen/viewSpacing_50dp"
+                    android:layout_height="@dimen/viewSpacing_50dp"
+                    android:contentDescription="@string/desc_weather_type_icon"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:icon="@{mainActivityViewModel.weatherLiveData.icon}"
+                    tools:src="@drawable/ic_sun" />
+
+                <TextView
+                    android:id="@+id/tvTemperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/textSpacing_60sp"
+                    app:layout_constraintStart_toStartOf="@+id/tvCityName"
+                    app:layout_constraintTop_toBottomOf="@+id/ivWeatherIcon"
+                    android:text="@{mainActivityViewModel.temperature}" />
+
+                <TextView
+                    android:id="@+id/tvTemperatureDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/textSpacing_14sp"
+                    app:layout_constraintStart_toStartOf="@+id/tvTemperature"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTemperature"
+                    android:text="@{mainActivityViewModel.temperatureDesc}" />
+
+                <GridLayout
+                    android:id="@+id/tl_moreinfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/viewSpacing_16dp"
+                    android:columnCount="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTemperatureDesc">
+
+                    <TextView
+                        android:id="@+id/tvSunRise"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginEnd="@dimen/viewSpacing_16dp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:gravity="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textSpacing_14sp"
+                        app:drawableTopCompat="@drawable/ic_sunrise"
+                        android:text="@{mainActivityViewModel.sunrise}" />
+
+                    <TextView
+                        android:id="@+id/tvSunSet"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginEnd="@dimen/viewSpacing_16dp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:gravity="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textSpacing_14sp"
+                        app:drawableTopCompat="@drawable/ic_sunset"
+                        android:text="@{mainActivityViewModel.sunset}" />
+
+                    <TextView
+                        android:id="@+id/tvPressure"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginTop="@dimen/viewSpacing_16dp"
+                        android:layout_marginEnd="@dimen/viewSpacing_16dp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:gravity="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textSpacing_14sp"
+                        app:drawableTopCompat="@drawable/ic_gauge"
+                        android:text="@{mainActivityViewModel.pressure}" />
+
+                    <TextView
+                        android:id="@+id/tvHumidity"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginTop="@dimen/viewSpacing_16dp"
+                        android:layout_marginEnd="@dimen/viewSpacing_16dp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:gravity="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textSpacing_14sp"
+                        app:drawableTopCompat="@drawable/ic_humidity"
+                        android:text="@{mainActivityViewModel.humidity}" />
+
+                    <TextView
+                        android:id="@+id/tvWindSpeed"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginTop="@dimen/viewSpacing_16dp"
+                        android:layout_marginEnd="@dimen/viewSpacing_16dp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:gravity="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textSpacing_14sp"
+                        app:drawableTopCompat="@drawable/ic_wind"
+                        android:text="@{mainActivityViewModel.windSpeed}"/>
+
+                    <TextView
+                        android:id="@+id/tvWindDegree"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginTop="@dimen/viewSpacing_16dp"
+                        android:layout_marginEnd="@dimen/viewSpacing_16dp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:gravity="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textSpacing_14sp"
+                        app:drawableTopCompat="@drawable/ic_explore"
+                        android:text="@{mainActivityViewModel.windDegree}" />
+
+                </GridLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.1"
+            android:contentDescription="@string/desc_background_image"
+            android:paddingBottom="-40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_river"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

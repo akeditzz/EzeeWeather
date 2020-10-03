@@ -19,7 +19,7 @@ abstract class EzeeWeatherDataBase : RoomDatabase() {
                 synchronized(EzeeWeatherDataBase::class.java) {
                     if (sInstance == null) {
                         sInstance = Room.databaseBuilder(
-                            context.applicationContext,
+                            context,
                             EzeeWeatherDataBase::class.java,
                             "EzeeWeatherDataBase"
                         )

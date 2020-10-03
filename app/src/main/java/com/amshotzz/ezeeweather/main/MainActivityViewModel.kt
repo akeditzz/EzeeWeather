@@ -106,7 +106,7 @@ class MainActivityViewModel(
     /**
      * Function to create entity object and insert data into local db
      */
-    private fun getWeatherEntityData(it: WeatherDataClass?): WeatherEntity? {
+    fun getWeatherEntityData(it: WeatherDataClass?): WeatherEntity? {
         val weatherEntity = WeatherEntity(
             jobId,
             it?.name ?: "",

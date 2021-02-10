@@ -7,13 +7,15 @@ import android.os.Build
 import com.amshotzz.ezeeweather.utils.log.Logger
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
+import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.ConnectException
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NetworkHelper constructor(private val context: Context) {
+class NetworkHelper (private val context: Context) {
 
     companion object {
         private const val TAG = "NetworkHelper"

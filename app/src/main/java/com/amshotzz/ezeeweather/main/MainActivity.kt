@@ -12,31 +12,33 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.amshotzz.ezeeweather.R
 import com.amshotzz.ezeeweather.databinding.ActivityMainBinding
-import com.amshotzz.ezeeweather.di.components.ActivityComponent
 import com.amshotzz.ezeeweather.jobScheduler.WeatherDataFlushJobService
 import com.amshotzz.ezeeweather.mvvmBase.BaseActivity
+import com.amshotzz.ezeeweather.mvvmBase.BaseViewModel
 import com.amshotzz.ezeeweather.utils.common.Resource
+import dagger.hilt.android.AndroidEntryPoint
 
 
-class MainActivity : BaseActivity<MainActivityViewModel>() {
+@AndroidEntryPoint
+class MainActivity : BaseActivity() {
     private var mMenu: Menu? = null
     val MINIMUM_LATENCY = 86400000 //24 hours
     var dataBinding: ActivityMainBinding? = null
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
 
 
     override fun setDataBindingLayout() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        dataBinding?.mainActivityViewModel = viewModel
+        dataBinding?.mainActivityViewModel = mainActivityViewModel
         dataBinding?.lifecycleOwner = this
     }
 
-    override fun injectDependencies(activityComponent: ActivityComponent) {
-        activityComponent.inject(this)
-    }
+    override fun setUpViewModel(): BaseViewModel = mainActivityViewModel
 
     override fun setupView(savedInstanceState: Bundle?) {
 
@@ -97,13 +99,13 @@ class MainActivity : BaseActivity<MainActivityViewModel>() {
     @SuppressLint("SetTextI18n")
     override fun setupObservers() {
         super.setupObservers()
-        viewModel.weatherLiveData.observe(this, Observer {
+        mainActivityViewModel.weatherLiveData.observe(this, Observer {
             // if data is available load it and hide/show search layout and hide/show search icon in menu so that user can again search if needed.
             if (it != null) {
                 mMenu?.findItem(R.id.action_search)?.isVisible = true
                 dataBinding?.searchLayout?.visibility = View.GONE
                 dataBinding?.bodyScrollLayout?.visibility = View.VISIBLE
-                viewModel.setLiveData(it)
+                mainActivityViewModel.setLiveData(it)
             } else {
                 dataBinding?.searchLayout?.visibility = View.VISIBLE
                 dataBinding?.bodyScrollLayout?.visibility = View.GONE
@@ -111,14 +113,14 @@ class MainActivity : BaseActivity<MainActivityViewModel>() {
             }
         })
 
-        viewModel.generateJobIdLiveData.observe(this, Observer {
+        mainActivityViewModel.generateJobIdLiveData.observe(this, Observer {
             // Generating random jobid for jobscheduler
-            viewModel.jobId = (1..10000).random()
-            while (isJobServiceOn(viewModel.jobId)) { // checking to see if the job id is already scheduled
-                viewModel.jobId = (1..10000).random()
+            mainActivityViewModel.jobId = (1..10000).random()
+            while (isJobServiceOn(mainActivityViewModel.jobId)) { // checking to see if the job id is already scheduled
+                mainActivityViewModel.jobId = (1..10000).random()
             }
-            viewModel.insertAndSetWeatherData(it) // inserting the data to local storage (Room DB) and setting values to live data
-            scheduleJobToFlush(viewModel.jobId) // schedule a job to flush the local stored data after 24 hours
+            mainActivityViewModel.insertAndSetWeatherData(it) // inserting the data to local storage (Room DB) and setting values to live data
+            scheduleJobToFlush(mainActivityViewModel.jobId) // schedule a job to flush the local stored data after 24 hours
         })
     }
 
@@ -156,7 +158,7 @@ class MainActivity : BaseActivity<MainActivityViewModel>() {
     private fun getWeatherByCityName() {
         hideKeyboard()
         if (dataBinding?.etSearchCity?.text?.isNotEmpty() == true) {
-            viewModel.getWeatherEntityFromDatabaseAsynstask(dataBinding?.etSearchCity?.text.toString())
+            mainActivityViewModel.getWeatherEntityFromDatabaseAsynstask(dataBinding?.etSearchCity?.text.toString())
                 .execute()
         } else {
             viewModel.messageString.postValue(Resource.error(getString(R.string.mesg_please_enter_city_name)))

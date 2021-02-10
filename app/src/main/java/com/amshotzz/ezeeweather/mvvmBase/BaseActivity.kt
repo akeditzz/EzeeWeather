@@ -6,46 +6,30 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.test.espresso.IdlingResource
-import com.amshotzz.ezeeweather.application.EzeeWeatherApplication
-import com.amshotzz.ezeeweather.di.components.ActivityComponent
-import com.amshotzz.ezeeweather.di.components.DaggerActivityComponent
-import com.amshotzz.ezeeweather.di.modules.ActivityModule
 import com.amshotzz.ezeeweather.utils.common.LoadingDialog
 import com.amshotzz.ezeeweather.utils.common.SimpleIdlingResource
-import javax.inject.Inject
 
 
-abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
 
-    @Inject
-    lateinit var viewModel: VM
+    lateinit var viewModel: BaseViewModel
 
     private var mIdlingResource: SimpleIdlingResource? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        injectDependencies(buildActivityComponent())
         super.onCreate(savedInstanceState)
+        viewModel = setUpViewModel()
         setDataBindingLayout()
         setupObservers()
         setupView(savedInstanceState)
         viewModel.onCreate()
     }
-
-
-    private fun buildActivityComponent() =
-        DaggerActivityComponent
-            .builder()
-            .applicationComponent((application as EzeeWeatherApplication).applicationComponent)
-            .activityModule(ActivityModule(this))
-            .build()
-
 
     protected open fun setupObservers() {
         viewModel.messageString.observe(this, Observer {
@@ -89,7 +73,8 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
     }
 
     fun Context.hideKeyboard(view: View) {
-        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
@@ -118,8 +103,8 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
 
     protected abstract fun setDataBindingLayout()
 
-    protected abstract fun injectDependencies(activityComponent: ActivityComponent)
-
     protected abstract fun setupView(savedInstanceState: Bundle?)
+
+    protected abstract fun setUpViewModel(): BaseViewModel
 
 }

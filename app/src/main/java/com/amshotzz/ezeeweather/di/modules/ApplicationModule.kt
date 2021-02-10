@@ -9,26 +9,20 @@ import com.amshotzz.ezeeweather.api.network.NetworkService
 import com.amshotzz.ezeeweather.api.network.Networking
 import com.amshotzz.ezeeweather.application.EzeeWeatherApplication
 import com.amshotzz.ezeeweather.database.EzeeWeatherDataRepository
-import com.amshotzz.ezeeweather.di.ApplicationContext
 import com.amshotzz.ezeeweather.utils.network.NetworkHelper
 import com.amshotzz.ezeeweather.utils.rx.RxSchedulerProvider
 import com.amshotzz.ezeeweather.utils.rx.SchedulerProvider
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Singleton
 
+@InstallIn(SingletonComponent::class)
 @Module
-class ApplicationModule(private val application: EzeeWeatherApplication) {
-
-    @Provides
-    @Singleton
-    fun provideApplication(): Application = application
-
-    @Provides
-    @Singleton
-    @ApplicationContext
-    fun provideContext(): Context = application
+class ApplicationModule() {
 
     /**
      * Since this function do not have @Singleton then each time CompositeDisposable is injected
@@ -47,27 +41,21 @@ class ApplicationModule(private val application: EzeeWeatherApplication) {
      */
     @Provides
     @Singleton
-    fun provideNetworkService(): NetworkService =
+    fun provideNetworkService(@ApplicationContext context: Context): NetworkService =
         Networking.create(
             "",
-            BuildConfig.BaseUrl,
-            application.cacheDir,
-            10 * 1024 * 1024, // 10MB
-            application
+            BuildConfig.BaseUrl,// 10MB
+            context
         )
-
     @Singleton
     @Provides
-    fun provideNetworkHelper(): NetworkHelper = NetworkHelper(application)
-
+    fun provideNetworkHelper(@ApplicationContext context: Context): NetworkHelper = NetworkHelper(context)
     @Provides
-    fun provideAlertDialogBuilder(): AlertDialog.Builder = AlertDialog.Builder(application)
-
+    fun provideAlertDialogBuilder(@ApplicationContext context: Context): AlertDialog.Builder = AlertDialog.Builder(context)
     @Provides
-    fun provideLayoutInflater(): LayoutInflater = LayoutInflater.from(application)
-
+    fun provideLayoutInflater(@ApplicationContext context: Context): LayoutInflater = LayoutInflater.from(context)
     @Provides
-    fun provideEzeeWeatherDataRepository(): EzeeWeatherDataRepository? =
-        EzeeWeatherDataRepository.getInstance(application)
+    fun provideEzeeWeatherDataRepository(@ApplicationContext context: Context): EzeeWeatherDataRepository? =
+        EzeeWeatherDataRepository.getInstance(context)
 
 }

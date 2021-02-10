@@ -4,20 +4,18 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import androidx.multidex.MultiDexApplication
-import com.amshotzz.ezeeweather.di.components.ApplicationComponent
-import com.amshotzz.ezeeweather.di.components.DaggerApplicationComponent
-import com.amshotzz.ezeeweather.di.modules.ApplicationModule
 import com.amshotzz.ezeeweather.utils.common.LoadingDialog
 import com.amshotzz.ezeeweather.utils.network.InternetAvailabilityChecker
 import com.amshotzz.ezeeweather.utils.network.InternetConnectivityListener
+import dagger.hilt.android.HiltAndroidApp
 
 
+@HiltAndroidApp
 class EzeeWeatherApplication : MultiDexApplication(), Application.ActivityLifecycleCallbacks,
     InternetConnectivityListener {
 
     private var isConnected: Boolean = false
     private var mInternetAvailabilityChecker: InternetAvailabilityChecker? = null
-    lateinit var applicationComponent: ApplicationComponent
 
 
     override fun onCreate() {
@@ -25,13 +23,6 @@ class EzeeWeatherApplication : MultiDexApplication(), Application.ActivityLifecy
         InternetAvailabilityChecker.init(this)
         /*Register Activity Lifecycle callbacks*/
         registerActivityLifecycleCallbacks(this)
-
-        applicationComponent = DaggerApplicationComponent
-            .builder()
-            .applicationModule(ApplicationModule(this))
-            .build()
-        applicationComponent.inject(this)
-
     }
 
 

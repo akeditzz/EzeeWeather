@@ -8,6 +8,7 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.SuperscriptSpan
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.amshotzz.ezeeweather.BuildConfig
 import com.amshotzz.ezeeweather.R
@@ -25,7 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-class MainActivityViewModel(
+class MainActivityViewModel @ViewModelInject constructor(
     ezVSchedulerProvider: SchedulerProvider,
     compositeDisposable: CompositeDisposable,
     ezVNetworkHelper: NetworkHelper,

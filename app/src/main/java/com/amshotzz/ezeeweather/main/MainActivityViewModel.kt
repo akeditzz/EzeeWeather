@@ -8,7 +8,6 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.SuperscriptSpan
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import com.amshotzz.ezeeweather.BuildConfig
 import com.amshotzz.ezeeweather.R
@@ -19,14 +18,17 @@ import com.amshotzz.ezeeweather.utils.common.Resource
 import com.amshotzz.ezeeweather.utils.network.NetworkHelper
 import com.amshotzz.ezeeweather.utils.rx.SchedulerProvider
 import com.bumptech.glide.Glide
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class MainActivityViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(
     ezVSchedulerProvider: SchedulerProvider,
     compositeDisposable: CompositeDisposable,
     ezVNetworkHelper: NetworkHelper,
